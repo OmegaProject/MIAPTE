@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Copyright (C) 2012 - 2016 OMEGA Project
+#       University of Massachusetts Medical School
+#
+# This work is licensed under the:
+#      Creative Commons Attribution Share-Alike 4.0 International License
+# To view a copy of this license, visit
+#      https://creativecommons.org/licenses/by-sa/4.0/
+# or send a letter to
+#      Creative Commons
+#      PO Box 1866, Mountain View, CA 94042
+# or call 
+#       +1415-429-6753
+# or write an email to 
+#       info@creativecommons.org
+# For attribution instructions, contact:
+#       Caterina Strambio De Castillia, caterina.strambio@umassmed.edu or
+#       Alessandro Rigano, alex.rigano@umassmed.edu
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+<xs:schema targetNamespace="http://omega.umassmed.edu/TrajectoryElements"
+  xmlns="http://omega.umassmed.edu/TrajectoryElements" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  elementFormDefault="qualified" xmlns:OME="http://www.openmicroscopy.org/Schemas/OME/2016-06"
+  xmlns:TrajectoryElement="http://omega.umassmed.edu/TrajectoryElements"
+  xmlns:ns1="http://omega.umassmed.edu/AnalysisElements">
+
+  <xs:import namespace="http://www.openmicroscopy.org/Schemas/OME/2016-06"
+    schemaLocation="http://www.openmicroscopy.org/Schemas/OME/2016-06/ome.xsd"/>
+
+  <!-- definition of global attributes -->
+  <xs:attribute name="ROIID" type="OME:LSID"/>
+  <xs:attribute name="Name" type="xs:string">
+    <xs:annotation>
+      <xs:documentation>The Name is an optional attribute that identifies the element to the user.</xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="Description" type="xs:string"/>
+  <xs:attribute name="XCoordinate" type="xs:float">
+    <xs:annotation>
+      <xs:documentation>The sub-pixel x coordinate of the centroid of the ROI (by default in pixels).</xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="YCoordinate" type="xs:float">
+    <xs:annotation>
+      <xs:documentation>The sub-pixel y coordinate of the centroid of the ROI (by default in pixels).
+</xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="ParticleID" type="OME:LSID"/>
+  <xs:attribute name="StartParticleID" type="OME:LSID"/>
+  <xs:attribute name="EndParticleID" type="OME:LSID"/>
+  <xs:attribute name="PeakIntensity" type="xs:integer">
+    <xs:annotation>
+      <xs:documentation>The fluorescence intensity of the brightest pixel within a spot (i.e. local maximum). </xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="CentroidIntensity" type="xs:integer">
+    <xs:annotation>
+      <xs:documentation>The fluorescence intensity of the pixel occupying the center-of-mass (i.e. centroid) of the spot.</xs:documentation>
+    </xs:annotation>
+  </xs:attribute>
+  <xs:attribute name="LinkID" type="OME:LSID"/>
+  <xs:attribute name="EditedLinkID" type="OME:LSID"/>
+  <xs:attribute name="TrajectoryID" type="OME:LSID"/>
+  <xs:attribute name="EditedTrajectoryID" type="OME:ROIID"/>
+  <xs:attribute name="SegmentID" type="OME:LSID"/>
+
+  <!-- definition of symple types -->
+  <xs:simpleType name="Units">
+    <xs:annotation>
+      <xs:documentation>The units used to represent a value. In all cases use units defined in the Units of Measurements Onthology (https://bioportal.bioontology.org/ontologies/UO)</xs:documentation>
+    </xs:annotation>
+    <xs:restriction base="xs:string"/>
+  </xs:simpleType>
+
+  <!-- definition of complex types -->
+  <xs:complexType name="ROIType">
+    <xs:annotation>
+      <xs:documentation>A 'Region of Interest'. Multiple ROIs may be specified.</xs:documentation>
+    </xs:annotation>
+    <xs:attribute ref="ROIID" use="required"/>
+    <xs:attribute ref="XCoordinate" use="required"/>
+    <xs:attribute name="XCoordinateUnit" type="Units"/>
+    <xs:attribute ref="YCoordinate" use="required"/>
+    <xs:attribute name="YCoordinateUnit" type="Units"/>
+  </xs:complexType>
+  <xs:complexType name="ParticleRefType">
+    <xs:complexContent>
+      <xs:extension base="OME:Reference">
+        <xs:attribute ref="ParticleID"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <!-- definition of elements -->
+  <xs:element name="ROI" type="ROIType"/>
+  <xs:element name="Particle">
+    <xs:annotation>
+      <xs:documentation>A diffraction-limited bright spot typically representing a viral particle or a vescicle moving within a cell.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="ROIType">
+          <xs:attribute ref="CentroidIntensity" use="required"/>
+          <xs:attribute ref="PeakIntensity"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ParticleRef" type="ParticleRefType"> </xs:element>
+  <xs:element name="StartParticleRef" type="ParticleRefType"/>
+  <xs:element name="EndPatticleRef" type="ParticleRefType"/>
+  <xs:element name="Link">
+    <xs:annotation>
+      <xs:documentation>The ordered portion of a line connecting the positions occupied by the same bright spot in two successive timepoints. It is intrinsically linked to two particle elements one of which has to be defined as the start particle and the other as the end particle.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="StartParticleRef"/>
+        <xs:element ref="EndPatticleRef"/>
+      </xs:sequence>
+      <xs:attribute use="required" ref="LinkID"/>
+      <xs:attribute name="NetDisplacement" type="xs:double">
+        <xs:annotation>
+          <xs:documentation>The vectorial distance between the position of a bright spot in two successive timepoints.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="DistanceTraveled" type="xs:double">
+        <xs:annotation>
+          <xs:documentation>The Euclidean distance between the position of a bright spot in two successive timepoints.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="InstantVelocity" type="xs:double">
+        <xs:annotation>
+          <xs:documentation>The displacement from the position of a bright spot at one timepoint and its position in the next timepoint  divided by the time interval. Note that this quantity is a vector.
+</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="InstantSpeed" type="xs:double">
+        <xs:annotation>
+          <xs:documentation>The magnitude value of intantaneous velocity.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="InstantAngle" type="xs:double">
+        <xs:annotation>
+          <xs:documentation>This measure represents the angle between the direction of movement between two successive timepoints and a reference axis.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+      <xs:attribute name="DirChange" type="xs:double">
+        <xs:annotation>
+          <xs:documentation>This measure represents the change in direction between two successive time intervals.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="LinkRef">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="OME:Reference">
+          <xs:attribute ref="LinkID"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EditedLink">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="OME:Reference">
+          <xs:attribute ref="LinkID"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Trajectory">
+    <xs:annotation>
+      <xs:documentation>A typically open, polygonal curve (i.e. polyline) composed of a ordered series of non-adjected line segments each connecting two successive positions occupied by the same bright spot (i.e. vertices) in a time series. It is typically used to reconstitute the path taken by an object over time.
+</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="2" maxOccurs="unbounded" ref="ParticleRef"/>
+        <xs:element minOccurs="1" maxOccurs="unbounded" ref="LinkRef"/>
+      </xs:sequence>
+      <xs:attribute use="required" ref="TrajectoryID"/>
+      <xs:attribute ref="Name"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="TrajectoryRef">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="OME:Reference">
+          <xs:attribute ref="TrajectoryID"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="EditedTrajectory">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="OME:Reference">
+          <xs:attribute ref="TrajectoryID"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Segment">
+    <xs:annotation>
+      <xs:documentation>A portion of a trajectory characterized by uniform mobility behaviour.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element minOccurs="1" maxOccurs="1" ref="StartParticleRef"/>
+        <xs:element ref="EndPatticleRef"/>
+      </xs:sequence>
+      <xs:attribute name="SegmentID" type="OME:ROIID" use="required"/>
+      <xs:attribute name="MotionType" type="xs:string">
+        <xs:annotation>
+          <xs:documentation>A term describing the motion type associated with the segment. This can be either assigned manually by the user or assigned automatically by a Segmentation Algorithm. In the latter case refer to the Segmentatin Algorithm documentation for further details.</xs:documentation>
+        </xs:annotation>
+      </xs:attribute>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SegmentRef" type="OME:Reference"/>
+</xs:schema>
