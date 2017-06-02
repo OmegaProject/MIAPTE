@@ -13,6 +13,10 @@ MIAPTE is structured in two sub-sections:
 1) MIAPTE - Section 1 contains elements, attributes and data structures describing the results of particle tracking, namely: particles, links, segments and trajectories.
 2) MIAPTE - Section 2 contains details about the algorithmic procedure utilized to produce and analyze trajectories as well as the results of trajectory analysis.
 
+# Team
+
+MIAPTE is being developed by Caterina Strambio De Castillia and Alex Rigano at the University of Massachusetts Medical School. Our goal is to facilitate the development of community standards for the field of multiple particle tracking.
+
 In June 2016 we deposited MIAPTEv01 to biosharing.org (https://biosharing.org/bsg-s000671). The current version of the model should be intended as a Request for Comments (https://en.wikipedia.org/wiki/Request_for_Comments) type of publication. 
 Any member of the scientific or developer community is encouraged to help us refine, modify, extend, improve the model by providing comments, suggestions and criticisms.
 
