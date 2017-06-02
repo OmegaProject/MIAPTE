@@ -15,3 +15,5 @@ MIAPTE is structured in two sub-sections:
 
 In June 2016 we deposited MIAPTEv01 to biosharing.org (https://biosharing.org/bsg-s000671). The current version of the model should be intended as a Request for Comments (https://en.wikipedia.org/wiki/Request_for_Comments) type of publication. 
 Any member of the scientific or developer community is encouraged to help us refine, modify, extend, improve the model by providing comments, suggestions and criticisms.
+
+More information can be found here:  http://big.umassmed.edu/omegaweb/miapte/miapte/
