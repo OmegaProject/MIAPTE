@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+# Copyright (C) 2012 - 2016 OMEGA Project
+#       University of Massachusetts Medical School
+#
+# This work is licensed under the:
+#      Creative Commons Attribution Share-Alike 4.0 International License
+# To view a copy of this license, visit
+#      https://creativecommons.org/licenses/by-sa/4.0/
+# or send a letter to
+#      Creative Commons
+#      PO Box 1866, Mountain View, CA 94042
+# or call 
+#       +1415-429-6753
+# or write an email to 
+#       info@creativecommons.org
+# For attribution instructions, contact:
+#       Caterina Strambio De Castillia, caterina.strambio@umassmed.edu or
+#       Alessandro Rigano, alex.rigano@umassmed.edu
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+<xs:schema targetNamespace="http://omega.umassmed.edu/AnalysisElements"
+	xmlns="http://omega.umassmed.edu/AnalysisElements" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified"
+	xmlns:analysisElements="http://omega.umassmed.edu/AnalysisElements"
+	xmlns:trajectoryElements="http://omega.umassmed.edu/TrajectoryElements"
+	xmlns:OME="http://www.openmicroscopy.org/Schemas/OME/2016-06">
+
+	<xs:import namespace="http://www.openmicroscopy.org/Schemas/OME/2016-06"
+		schemaLocation="http://www.openmicroscopy.org/Schemas/OME/2016-06/ome.xsd"/>
+
+	<xs:import namespace="http://omega.umassmed.edu/TrajectoryElements"
+		schemaLocation="../2016_MIAPTE-Section%201_Trajectory_Schema/2016-10-05_MIAPTE_Section%201_trajectoryElements_v01.xsd"/>
+	
+	<xs:import namespace="http://omega.umassmed.edu/TrajectoryElements"
+		schemaLocation="./2016-10-05_MIAPTE_Section%201_trajectoryElements_v01.xsd"/>
+
+
+	<!-- definition of global attributes -->
+	<xs:attribute name="DoubleValue" type="xs:double"/>
+	<xs:attribute name="IntValue" type="xs:integer"/>
+
+	<!-- definition of symple types -->
+
+	<!-- definition of complex types -->
+	<xs:complexType name="PlaneParticleEntry">
+		<xs:sequence>
+			<xs:element ref="OME:Plane"/>
+			<xs:element ref="trajectoryElements:Particle"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="ParticleDoubleValueEntry">
+		<xs:sequence>
+			<xs:element ref="trajectoryElements:ParticleRef"/>
+		</xs:sequence>
+		<xs:attribute ref="DoubleValue"/>
+	</xs:complexType>
+	<xs:complexType name="ParticleIntValueEntry">
+		<xs:sequence>
+			<xs:element ref="trajectoryElements:ParticleRef"/>
+		</xs:sequence>
+		<xs:attribute ref="IntValue"/>
+	</xs:complexType>
+	<xs:complexType name="SegmentDoubleValueEntry">
+		<xs:sequence>
+			<xs:element ref="trajectoryElements:SegmentRef"/>
+		</xs:sequence>
+		<xs:attribute ref="DoubleValue"/>
+	</xs:complexType>
+	<xs:complexType name="SegmentIntValueEntry">
+		<xs:sequence>
+			<xs:element ref="trajectoryElements:SegmentRef"/>
+		</xs:sequence>
+		<xs:attribute ref="IntValue"/>
+	</xs:complexType>
+	<xs:complexType name="TrajectorySegmentEntry">
+		<xs:sequence>
+			<xs:element ref="trajectoryElements:TrajectoryRef"/>
+			<xs:element ref="trajectoryElements:Segment"/>
+		</xs:sequence>
+	</xs:complexType>
+	<xs:complexType name="AnalysisRunType">
+		<xs:sequence>
+			<xs:element ref="OME:Experimenter"/>
+			<xs:element minOccurs="1" maxOccurs="1" ref="RunDefinition"/>
+			<xs:element minOccurs="0" maxOccurs="unbounded" ref="AnalysisRun"/>
+		</xs:sequence>
+		<xs:attribute name="AnlysisRunID" type="OME:LSID" use="required"/>
+		<xs:attribute ref="trajectoryElements:Name"/>
+		<xs:attribute name="AnalysisDate" type="xs:dateTime" use="required">
+			<xs:annotation>
+				<xs:documentation>The date in which the analysis was conducted.
+The element contains an xsd:dateTime string based on the ISO 8601 format (i.e. 1988-04-07T18:39:09.359)
+
+              YYYY-MM-DDTHH:mm:SS.sssZ
+              Y - Year
+              M - Month
+              D - Day
+              H - Hour
+              m - minutes
+              S - Seconds
+              s - sub-seconds (optional)
+              Z - Zone (optional) +HH:mm or -HH:mm or Z for UTC
+
+Note: xsd:dataTime supports a very wide date range with unlimited precision. </xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute ref="trajectoryElements:Description"/>
+	</xs:complexType>
+	<xs:complexType name="ParticleLinkingType">
+		<xs:complexContent>
+			<xs:extension base="AnalysisRunType">
+				<xs:sequence>
+					<xs:element minOccurs="0" maxOccurs="unbounded"
+						ref="trajectoryElements:Trajectory"/>
+					<xs:element ref="trajectoryElements:Link" maxOccurs="unbounded" minOccurs="0"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+	<xs:complexType name="TrackingMeasures">
+		<xs:complexContent>
+			<xs:extension base="AnalysisRunType">
+				<xs:sequence>
+					<xs:element maxOccurs="unbounded" minOccurs="0" ref="TrajectorySegmentMap"/>
+				</xs:sequence>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- definition of elements -->
+	<xs:element name="TrajectorySegmentMap" type="TrajectorySegmentEntry"/>
+	<xs:element name="AnalysisRun" type="AnalysisRunType"/>
+	<xs:element name="AlgorithmInformation">
+		<xs:complexType>
+			<xs:attribute name="AlgorithmInformationID" type="OME:LSID"/>
+			<xs:attribute ref="trajectoryElements:Name"/>
+			<xs:attribute name="AuthorName" type="xs:string"/>
+			<xs:attribute name="ReleaseDate" type="xs:dateTime"/>
+			<xs:attribute name="PublicationReference" type="xs:string"/>
+			<xs:attribute name="Version" type="xs:string"/>
+			<xs:attribute ref="trajectoryElements:Description"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="Parameter">
+		<xs:complexType>
+			<xs:attribute name="ParameterID" type="OME:LSID"/>
+			<xs:attribute ref="trajectoryElements:Name"/>
+			<xs:attribute name="Type" type="xs:string"/>
+			<xs:attribute name="Value" type="xs:double"/>
+			<xs:attribute name="Unit" type="trajectoryElements:Units"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="RunDefinition">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="AlgorithmInformation"/>
+				<xs:element maxOccurs="unbounded" ref="Parameter"/>
+			</xs:sequence>
+			<xs:attribute name="RunDefinitionID" type="OME:LSID"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SNREstimation">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AnalysisRunType">
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" name="MeanIntensityMap"
+							type="ParticleDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The mean fluorescence intensity of all pixels within a spot.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" name="ParticleAreaMap"
+							type="ParticleIntValueEntry">
+							<xs:annotation>
+								<xs:documentation>The area occupied by all pixels found within a particle as determined by the SNR algorithm's definition of the particle boundaries. Refer to documentation of theSNR algorithm for details.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" name="LocalBackgroundMap"
+							type="ParticleDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The mean fluorescence intensity of all pixels surrounding a particle. Refer to documentation of the SNR estimation algorithm for details of how a particle's sorroundings are defined.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" name="LocalNoiseMap"
+							type="ParticleDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>An estimate of the imaging noise associated with the bright spot's intensity.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element maxOccurs="unbounded" name="LocalSNRMap"
+							type="ParticleDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The signal-to-noise ratio between the intensity of the pixels found within a particle and that of those surrounding it. Refer to documentation of the SNR estimation algorithm for details.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ParticleDetection">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AnalysisRunType">
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="PlaneParticleMap"
+							type="PlaneParticleEntry"/>
+						<xs:element maxOccurs="unbounded" minOccurs="0"
+							name="IdentificationProbabilityMap" type="ParticleDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>A measure of the confidence with which the particle has been identified and localized. Refer to documentation of the spot detection algorithm for details.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ParticleLinking" type="ParticleLinkingType"> </xs:element>
+	<xs:element name="TrajectoryEditor">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ParticleLinkingType">
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0"
+							ref="trajectoryElements:EditedTrajectory"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="TrajectorySegmentation">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="AnalysisRunType">
+					<xs:sequence>
+						<xs:element maxOccurs="unbounded" minOccurs="0" ref="TrajectorySegmentMap"/>
+						<xs:element maxOccurs="unbounded" minOccurs="0" name="MotionTypes"
+							type="xs:string"/>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="IntensityMeasures">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="TrackingMeasures">
+					<xs:sequence>
+						<xs:element name="MaxPeakIntensityMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The maximum Peak Intensity of all particles within a track or a segment.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="MinPeakIntensityMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The minimum Peak Intensity of all particles within a track or a segment.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="AveragePeakIntensityMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The average Peak Intensity of all particles within a track or a segment.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="MaxCentroidIntensity" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The maximum Centroid Intensity of all particles within a track or a segment.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="MinCentroidIntensity" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The minimum Centroid Intensity of all particles within a track or a segment.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="AverageCentroidIntensity" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The average Centroid Intensity of all particles within a track or a segment.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="MaxMeanIntensityMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The maximum Mean Intensity of all particles within a track or a segment.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="MinMeanIntensityMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The minimum Mean Intensity of all particles within a track or a segment.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="AverageMeanIntensityMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The average Mean Intensity of all particles within a track or a segment.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="MobilityMeasures">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="TrackingMeasures">
+					<xs:sequence>
+						<xs:element name="TotalTimeTraveledMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The total duration of a trajectory or of a trajectory-segment.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="TotalNetDisplacementMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The vectorial distance between the start and the end position of the bright object whose movement is being captured by the trajectory being considered.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="TotalDistanceTraveledMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The scalar quantity representing the cumulative curvilinear distance traveled by the bright spot from the start position to the end of motion.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="MaxDispalcementMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The maximum distance the bright spot has traveled away from the origin of motion or from a user-set reference point.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ConfinementRatioMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The ratio between average velocity and average speed gives a measure of how far a bright spot is moving away from its origin durig the total trajectory time. The value of this measure ranges from 0 to 1, where 0 represents an object that is not progressing, while 1 represents an object that has moved as far from the origin as possible given the distance it traveled.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="DirectionalPersistanceMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The autocorrelation of the DirectionalChange between succesive time intervals. Can help distinguish between meandering objects and objects that are consistently moving in a given direction away from the origin. Is an indication of the "memory" of the process under study.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="VelocityMeasures">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="TrackingMeasures">
+					<xs:sequence>
+						<xs:element name="AverageStraightVelocityMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The Average Straight-line Velocity is a vectorial quantity calculated as the ratio between the Total Net Displacement and the Total Time Traveled.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="AverageCurvSpeedMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The Average Curvilinear Speed consist of the arithmetic mean of instantaneous speeds observed along the length of the trajectory. In case the time intervals between timepoints is constant, such as in most live imaging experiments, this quantity can be calculated as the ratio between Total Distance Traveled and the Total Time Traveled.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ForwardProgressionLinearityMap"
+							type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The ratio between Average Straight-line Velocity and Average Curvilinear Speed gives a measure of how fast an object is moving away from its origin durig the total trajectory time. The value of this measure ranges from 0 to 1, where 0 represents an object that is not progressing, while 1 represents an object that is moving as fast as possible from the origin given the distance traveled.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="ArrestCoeffMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The fraction of time an object is pausing or is having an instantaneous speed below a user-set minimum value.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DiffusivityMeasures">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="TrackingMeasures">
+					<xs:sequence>
+						<xs:element name="DiffusionCoeff2LinSlopeMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The Diffusion Coefficient of order 2 of an object moving by pure diffusion estimated as the slope of the Mean Square Displacement vs Δt linear plot (Saxton and Jacobson, 1997).</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="DiffusionCoeff2LogIntercept"
+							type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The Diffusion Coefficient of order 2 of an object moving by pure diffusion estimated from the intercept [i.e. y(0)] of the Mean Square Displacement vs Δt log-log plot using the formula D2 = (1/2d)*e^y(0)2 (Sbalzarini and Koumotsakos, 2005).</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="SlopeMSSMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>Slope of the Moment Scaling Spectrum), which consists of the plot of the order number, ν, versus the slope, γ, of the log-log plot of the moment of order ν vs. Δt (Ferrari et al. 2001).</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ErrorEstimationMeasures">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="TrackingMeasures">
+					<xs:sequence>
+						<xs:element name="UncertaintyD2Map" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The uncertainty associated with the estimation of D2. The uncertainty is related with the accuracy and the precision of particle detection and with the trajectory length.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="UncertaintySMSSMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The uncertainty associated with the estimation of SMSS. The uncertainty is related with the accuracy and the precision of particle detection and with the trajectory length.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="AnisotropyMeasures">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="TrackingMeasures">
+					<xs:sequence>
+						<xs:element name="RadiusGyrXMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The radius of gyration of the cloud of points defining a trajectory around the X axis.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="RadiusGyrYMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The radius of gyration of the cloud of points defining a trajectory around the Y axis.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="RadiusGyrZMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The radius of gyration of the cloud of points defining a trajectory around the Z axis.</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+						<xs:element name="AsymmetryMap" type="SegmentDoubleValueEntry">
+							<xs:annotation>
+								<xs:documentation>The Asymmetry (Asym) measure as defined in Huet et al. 2005. "High values of Asym indicate a greater tendency for a preferred direction. For example, for a perfectly symmetric tra- jectory, Asym 1⁄4 0, whereas for a straight line, Asym tends to infinity. For simulated 3D Brownian trajectories, Asym rapidly converges to  0.242 for large N" (Huet et al., 2005).</xs:documentation>
+							</xs:annotation>
+						</xs:element>
+					</xs:sequence>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>
