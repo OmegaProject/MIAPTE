@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#	MIAPTE v0.2 2017-07-12
+# 	**********************
+#	Copyright (C) 2012 - 2017 OMEGA Project
+#		University of Massachusetts Medical School
+#
+#	This work is licensed under the:
+#		Creative Commons Attribution Share-Alike 4.0 International License
+#	To view a copy of this license, visit
+#		https://creativecommons.org/licenses/by-sa/4.0/
+#	or send a letter to
+#		Creative Commons
+#		PO Box 1866, Mountain View, CA 94042
+#	or call 
+#		+1415-429-6753
+#	or write an email to 
+#		info@creativecommons.org
+#	For attribution instructions, contact:
+#		Caterina Strambio De Castillia, caterina.strambio@umassmed.edu or
+#		Alessandro Rigano, alex.rigano@umassmed.edu
+#
+#	This program is free software: you can redistribute it and/or modify
+#		it under the terms of the GNU General Public License as published by
+#		the Free Software Foundation, either version 3 of the License, or
+#		(at your option) any later version.
+#
+#		This program is distributed in the hope that it will be useful,
+#		but WITHOUT ANY WARRANTY; without even the implied warranty of
+#		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#		GNU General Public License for more details.
+#
+#		You should have received a copy of the GNU General Public License
+#		along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-->
+
+<xs:schema targetNamespace="http://omega.umassmed.edu/TrajectoryElements"
+	xmlns="http://omega.umassmed.edu/TrajectoryElements" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	elementFormDefault="qualified" xmlns:OME="http://www.openmicroscopy.org/Schemas/OME/2016-06"
+	xmlns:TrajectoryElement="http://omega.umassmed.edu/TrajectoryElements"
+	xmlns:ns1="http://omega.umassmed.edu/AnalysisElements">
+
+	<xs:import namespace="http://www.openmicroscopy.org/Schemas/OME/2016-06"
+		schemaLocation="http://www.openmicroscopy.org/Schemas/OME/2016-06/ome.xsd"/>
+
+	<!-- definition of global attributes -->
+	<xs:attribute name="ROIShapeID" type="OME:LSID"/>
+
+	<xs:attribute name="Name" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>The Name is an optional attribute that identifies
+				the element to the user.</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+
+	<xs:attribute name="Description" type="xs:string">
+		<xs:annotation>
+			<xs:documentation>A longer description for this element to make its
+				significance easier to interpret by users.</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+
+	<xs:attribute name="XCoordinate" type="xs:float">
+		<xs:annotation>
+			<xs:documentation>The sub-pixel x coordinate of a Brownian particle's
+				(i.e. bright spot) centroid (by default in pixels).
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+
+	<xs:attribute name="YCoordinate" type="xs:float">
+		<xs:annotation>
+			<xs:documentation>The sub-pixel y coordinate of a Brownian particle's
+				(i.e. bright spot) centroid (by default in pixels).
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+
+	<xs:attribute name="ZCoordinate" type="xs:float">
+		<xs:annotation>
+			<xs:documentation>The z coordinate of a Brownian particle's (i.e.
+				bright spot) centroid (by default it is a number that indicates the
+				optical plane where the particle is found).</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+
+	<xs:attribute name="XCoordinateUnit" type="Unit"/>
+
+	<xs:attribute name="YCoordinateUnit" type="Unit"/>
+
+	<xs:attribute name="ZCoordinateUnit" type="Unit"/>
+
+	<xs:attribute name="ParticleID" type="OME:LSID"/>
+
+	<xs:attribute name="StartParticleID" type="OME:LSID"/>
+
+	<xs:attribute name="EndParticleID" type="OME:LSID"/>
+
+	<xs:attribute name="PeakIntensity" type="xs:nonNegativeInteger">
+		<xs:annotation>
+			<xs:documentation>The signal intensity of the brightest pixel within
+				a bright spot (i.e. local maximum).</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+
+	<xs:attribute name="CentroidIntensity" type="xs:nonNegativeInteger">
+		<xs:annotation>
+			<xs:documentation>The signal intensity of the pixel occupying the
+				center-of-mass (i.e. centroid) within a bright spot.
+			</xs:documentation>
+		</xs:annotation>
+	</xs:attribute>
+
+	<xs:attribute name="LinkID" type="OME:LSID"/>
+
+	<xs:attribute name="TrajectoryID" type="OME:LSID"/>
+
+	<xs:attribute name="EditedTrajectoryID" type="OME:ROIID"/>
+
+	<xs:attribute name="TrajectorySegmentID" type="OME:LSID"/>
+
+	<!-- definition of symple types -->
+	<xs:simpleType name="Unit">
+		<xs:annotation>
+			<xs:documentation>The units used to represent a value. In all cases
+				use units defined in the Units of Measurements Onthology
+				(https://bioportal.bioontology.org/ontologies/UO)</xs:documentation>
+		</xs:annotation>
+		<xs:restriction base="xs:string"/>
+	</xs:simpleType>
+
+	<!-- definition of complex types -->
+	<xs:complexType name="ROIShapeType">
+		<xs:annotation>
+			<xs:documentation>This element contains a single specific Region of
+				Interest (ROI) shape and links it to a channel, a timepoint and a
+				z-section. </xs:documentation>
+		</xs:annotation>
+		<xs:attribute ref="ROIShapeID" use="required"/>
+		<xs:attribute ref="Description"/>
+		<xs:attribute name="TheZ" type="xs:nonNegativeInteger" use="required">
+			<xs:annotation>
+				<xs:documentation>The z-section the ROIShape applies to.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="TheT" type="xs:nonNegativeInteger" use="required">
+			<xs:annotation>
+				<xs:documentation>The timepoint the ROIShape applies to.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+		<xs:attribute name="TheC" type="xs:nonNegativeInteger" use="required">
+			<xs:annotation>
+				<xs:documentation>The channel the ROIShape applies to.
+				</xs:documentation>
+			</xs:annotation>
+		</xs:attribute>
+	</xs:complexType>
+
+	<xs:complexType name="ParticleRefType">
+		<xs:complexContent>
+			<xs:extension base="OME:Reference">
+				<xs:attribute ref="ParticleID"/>
+			</xs:extension>
+		</xs:complexContent>
+	</xs:complexType>
+
+	<!-- definition of elements -->
+	<xs:element name="ROIShape" type="ROIShapeType">
+		<xs:annotation>
+			<xs:documentation>This element contains a single specific Region of
+				Interest (ROI) shape and links it to a channel, a timepoint and a
+				z-section. </xs:documentation>
+		</xs:annotation>
+	</xs:element>
+
+	<xs:element name="Particle">
+		<xs:annotation>
+			<xs:documentation>A diffraction-limited object small enough to
+				undergo Brownian motion. "The term includes for example a lipid, a
+				protein, a subnuclear body, a vesicle, an organelle, a virus, or a
+				colloidal particle", from Saxton, 2009 (ISBN: 978-1-58829-973-4)
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="ROIShapeType">
+					<xs:attribute ref="XCoordinate" use="required"/>
+					<xs:attribute ref="XCoordinateUnit" use="required"/>
+					<xs:attribute ref="YCoordinate" use="required"/>
+					<xs:attribute ref="YCoordinateUnit" use="required"/>
+					<xs:attribute ref="ZCoordinate"/>
+					<xs:attribute ref="ZCoordinateUnit"/>
+					<xs:attribute name="Radius" type="xs:double">
+						<xs:annotation>
+							<xs:documentation>The radius of the identified particle. This can
+								be either set by the user as input or it can be determined by
+								the particle detection algorithm.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute name="RadiusUnit" type="Unit">
+						<xs:annotation>
+							<xs:documentation>The units used to represent the radius of the
+								particle.</xs:documentation>
+						</xs:annotation>
+					</xs:attribute>
+					<xs:attribute ref="CentroidIntensity" use="required"/>
+					<xs:attribute ref="PeakIntensity"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="ParticleRef" type="ParticleRefType"/>
+
+	<xs:element name="StartParticleRef" type="ParticleRefType"/>
+
+	<xs:element name="EndParticleRef" type="ParticleRefType"/>
+
+	<xs:element name="Link">
+		<xs:annotation>
+			<xs:documentation>The ordered portion of a line connecting the
+				positions occupied by the same bright spot in two successive
+				timepoints. It is intrinsically linked to two particle elements one
+				of which has to be defined as the start particle and the other as
+				the end particle.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="StartParticleRef" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="EndParticleRef" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute ref="LinkID" use="required"/>
+			<xs:attribute name="DistanceTraveled" type="xs:double">
+				<xs:annotation>
+					<xs:documentation>The Euclidean distance between the position of a
+						Brownian particle in two successive timepoints.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="CumTimeTraveled" type="xs:double">
+				<xs:annotation>
+					<xs:documentation>Time traveled from the origin of motion [default]
+						or from a reference poin to the current time point.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="CumCurvDistTraveled " type="xs:double">
+				<xs:annotation>
+					<xs:documentation>The scalar quantity representing the total
+						cumulative curvilinear distance traveled by a Browninan particle
+						from the origing of motion to the current position. Generally the
+						distance between any two points is taken to be the Euclidean norm.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="CumStraightDistTraveled " type="xs:double">
+				<xs:annotation>
+					<xs:documentation>The scalar quantity representing the net
+						straight-line distance (also known as net displacement) betweenthe
+						position of a Brownian particle at a specific timepoint and its
+						position at the origin of motion. Generally the distance between
+						any two points is taken to be the Euclidean norm.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="CumConfinementRatio" type="xs:double">
+				<xs:annotation>
+					<xs:documentation>The Confinement Ratio (also known as the
+						meandering index, straightness index or directionality ratio) is a
+						measure of the straightness or confinement of trajectories. The
+						Cumulative Confinement Ratio is calculated as the ratio between
+						the net displacement of an object from the origin of motion and
+						the total length of the path that the object has travelled up to
+						the current position. Because the path length cannot be smaller
+						than the displacement the confinement ratio can vary between 0 (a
+						completely condensed track, where the object returns to the exact
+						position where it started) and 1 (a perfectly straight track).
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="InstantAngle" type="xs:double">
+				<xs:annotation>
+					<xs:documentation>This measure represents the angle between the
+						direction of movement between two successive timepoints and a
+						reference axis.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="DirChange" type="xs:double">
+				<xs:annotation>
+					<xs:documentation>This measure (also sometimes refered to as
+						turning angle) represents the change in direction between two
+						successive time intervals.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="InstantSpeed" type="xs:double">
+				<xs:annotation>
+					<xs:documentation>The euclidean distance between the position of a
+						Brownian particle at one timepoint and its position in the next
+						timepoint divided by the time interval between the two time
+						points.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="InstantCumCurvSpeed" type="xs:double">
+				<xs:annotation>
+					<xs:documentation>The Instantanous Cumulative Curvilinear Speed
+						consist of the arithmetic mean of instantaneous speeds observed
+						along the length of the trajectory up to the current position
+						occupied by a Brownian particle. In case the time intervals
+						between timepoints is constant, such as in most live imaging
+						experiments, this quantity can be calculated as the ratio between
+						Cumulative Curvilinear Distance Traveled and the Time Traveled.
+					</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+			<xs:attribute name="InstantCumStraightSpeed" type="xs:double">
+				<xs:annotation>
+					<xs:documentation>The euclidean distance between the position of a
+						Brownian particle at a specific timepoint and its position at the
+						origin of motion divided by the time traveled.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="LinkRef">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="OME:Reference">
+					<xs:attribute ref="LinkID"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="Trajectory">
+		<xs:annotation>
+			<xs:documentation>A typically open, polygonal curve (i.e. polyline)
+				composed of a ordered series of non-adjected line segments each
+				connecting two successive positions (i.e. vertices) occupied by the
+				same particle in a time series. It is typically used to reconstitute
+				the path taken by the object under study over time.
+			</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ParticleRef" minOccurs="2" maxOccurs="unbounded"/>
+				<xs:element ref="LinkRef" minOccurs="1" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute ref="TrajectoryID" use="required"/>
+			<xs:attribute ref="Name"/>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="TrajectoryRef">
+		<xs:complexType>
+			<xs:complexContent>
+				<xs:extension base="OME:Reference">
+					<xs:attribute ref="TrajectoryID"/>
+				</xs:extension>
+			</xs:complexContent>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="TrajectorySegment">
+		<xs:annotation>
+			<xs:documentation>A portion of a trajectory characterized by uniform 
+			mobility behaviour.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="StartParticleRef" minOccurs="1" maxOccurs="1"/>
+				<xs:element ref="EndParticleRef" minOccurs="1" maxOccurs="1"/>
+			</xs:sequence>
+			<xs:attribute name="SegmentID" type="OME:ROIID" use="required"/>
+			<xs:attribute name="MotionType" type="xs:string">
+				<xs:annotation>
+					<xs:documentation>A term describing the motion type associated with
+						the segment. This can be either assigned manually by the user or
+						assigned automatically by a Segmentation Algorithm. In the latter
+						case refer to the Segmentatin Algorithm documentation for further
+						details.</xs:documentation>
+				</xs:annotation>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+
+	<xs:element name="TrajectorySegmentRef" type="OME:Reference"/>
+
+</xs:schema>
