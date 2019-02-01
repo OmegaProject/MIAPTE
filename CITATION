@@ -41,11 +41,11 @@ references:
         affiliation: University of Massachusetts Medical School
         email: caterina.strambio@umassmed.edu
         orcid: https://orcid.org/0000-0002-1069-1816
-    title: "An algorithm-centric Monte Carlo method to empirically quantify motion type estimation uncertainty in single-particle tracking"
-    year: 2018
+    title: "Proposal for minimum information guidelines to report and reproduce results of particle tracking and motion analysis"
+    year: 2017
     journal: bioRxiv.org
-    doi: 10.1101/379255
-    url: https://doi.org/10.1101/379255
+    doi: 10.1101/155036
+    url: https://doi.org/10.1101/155036    
   - type: article
     scope: Cite this paper every time you discuss or utilize the OMEGA software, which implements the MIAPTE standards for data provenance management
     authors:
