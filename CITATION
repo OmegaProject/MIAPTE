@@ -12,7 +12,7 @@ authors:
     orcid: https://orcid.org/0000-0002-1069-1816
 title: Minimum Information About Particle Tracking Experiments (MIAPTE)
 version: v02
-doi: 10.5281/zenodo.2535534 
+doi: https://doi.org/10.5281/zenodo.2535534
 date-released: 2019-01-08
 repository: https://github.com/OmegaProject/MIAPTE
 description: Minimum Information About Particle Tracking Experiments (MIAPTE) is a proposal for minimum information reporting guidelines that we hope will facilitate the sharing and dissemination of results obtained from Multiple Particle Tracking (MPT) experiments.
